@@ -30,5 +30,55 @@ class HangpersonGame
       return http.post(uri, "").body
     }
   end
+  
+  def guess(letter)
+    if !(/[a-z]/i =~ letter)
+      raise ArgumentError
+    end
+    
+    letter.downcase!
+    
+    if(word.include? letter)
+      if(@guesses.include? letter)
+        return false
+      else
+        @guesses+=letter
+        return true
+      end
+    else
+      if(@wrong_guesses.include? letter)
+        return false
+      else
+        @wrong_guesses+=letter
+        return true
+      end
+    end
+  end
+  
+  def word_with_guesses()
+    to_print = ''
+    @word.split('').each do |letter|
+      if @guesses.include? letter
+        to_print += letter
+      else
+        to_print += '-'
+      end
+    end
+    to_print
+  end
+  
+  def check_win_or_lose()
+    if wrong_guesses.length >= 7
+      return :lose
+    end
+    
+    @word.split('').each do |letter|
+      if !@guesses.include? letter
+        return :play
+      end
+    end
+    
+    return :win
+  end
 
 end
